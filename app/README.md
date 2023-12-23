@@ -1,16 +1,60 @@
-# fir_analysis
+# Flutter App with Flask Integration
 
-A new Flutter project.
+This Flutter app is integrated with a Flask server for text detection from images.
+
+## Features
+
+- Scan text using the device camera
+- Send captured images to a Flask server for text detection
+- Display detected text on the app
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+To run the Flutter app, follow these steps:
 
-A few resources to get you started if this is your first Flutter project:
+1. **Clone the repository:**
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+   ```bash
+   git clone https://github.com/your_username/your_flutter_flask_app.git
+   ```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+2. **Navigate to the project directory:**
+
+   ```bash
+   cd your_flutter_flask_app
+   ```
+
+3. **Run the Flutter app:**
+
+   ```bash
+   flutter run
+   ```
+
+## Flask Server
+
+The Flask server is responsible for text detection from images. Make sure to run the Flask server before using the Flutter app.
+
+1. **Install Flask:**
+
+   ```bash
+   pip install Flask
+   ```
+
+2. **Run the Flask server:**
+
+   ```bash
+   python app.py
+   ```
+
+   The server will be accessible at `http://127.0.0.1:5000`.
+
+## Contributing
+
+If you find any issues or have suggestions for improvement, feel free to open an issue or create a pull request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+```
+
+Replace the placeholder URLs (`https://github.com/your_username/your_flutter_flask_app.git`), app features, and license details according to your actual project details. Additionally, you can expand or customize the sections based on your project's needs.
