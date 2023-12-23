@@ -51,10 +51,3 @@ The Flask server is responsible for text detection from images. Make sure to run
 ## Contributing
 
 If you find any issues or have suggestions for improvement, feel free to open an issue or create a pull request.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-```
-
-Replace the placeholder URLs (`https://github.com/your_username/your_flutter_flask_app.git`), app features, and license details according to your actual project details. Additionally, you can expand or customize the sections based on your project's needs.
