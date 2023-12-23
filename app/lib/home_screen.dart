@@ -1,4 +1,4 @@
-import 'package:fir_analysis/ocr_screen.dart';
+import 'package:fir_analysis/new_ocr_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,7 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>const TextScanner()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const NewOcrScreen()));
           },
           child: const Text('Open Camera to scan'),
         ),
