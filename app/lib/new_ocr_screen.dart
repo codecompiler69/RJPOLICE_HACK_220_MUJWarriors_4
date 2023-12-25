@@ -151,43 +151,44 @@ class _HomeScreenState extends State<NewOcrScreen> with WidgetsBindingObserver {
   }
 
   Future<void> scanImage() async {
-    if (cameraController == null || isLoading) {
-      return;
-    }
-
-    setState(() {
-      isLoading = true;
-    });
-
-    final navigator = Navigator.of(context);
-
-    try {
-      final pictureFile = await cameraController!.takePicture();
-      final file = File(pictureFile.path);
-      print(file);
-
-      // Send the image to the Flask server
-      final detectedText = await sendImageToServer(file);
-      print('detectedText: ${detectedText}');
-
-      // Navigate to the result screen and pass the detected text
-      await navigator.push(
-        MaterialPageRoute(
-          builder: (context) => ResultScreen(text: detectedText),
-        ),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('An error occurred when scanning text'),
-        ),
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
+  if (cameraController == null || isLoading) {
+    return;
   }
+
+  setState(() {
+    isLoading = true;
+  });
+
+  final navigator = Navigator.of(context);
+
+  try {
+    final pictureFile = await cameraController!.takePicture();
+    final file = File(pictureFile.path);
+    print(file);
+
+    // Send the image to the Flask server
+    final detectedText = await sendImageToServer(file);
+    print('detectedText: ${detectedText}');
+
+    // Navigate to the result screen and pass the detected text
+    await navigator.push(
+      MaterialPageRoute(
+        builder: (context) => ResultScreen(text: detectedText),
+      ),
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('An error occurred when scanning text'),
+      ),
+    );
+  } finally {
+    setState(() {
+      isLoading = false;
+    });
+  }
+}
+
 
   Future<String> sendImageToServer(File imageFile) async {
     var request = http.MultipartRequest(
