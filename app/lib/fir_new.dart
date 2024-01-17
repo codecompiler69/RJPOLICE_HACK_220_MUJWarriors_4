@@ -1,9 +1,16 @@
-import 'package:fir_analysis/home_screen.dart';
-import 'package:fir_analysis/new_ocr_screen.dart';
+import 'package:fir_analysis/ocr.dart';
 import 'package:flutter/material.dart';
 
 class FIRForm extends StatefulWidget {
-  const FIRForm({Key? key}) : super(key: key);
+  final List<String> ipcSections;
+  final String description;
+  
+
+  const FIRForm(
+      {Key? key,
+      required this.ipcSections,
+      required this.description})
+      : super(key: key);
 
   @override
   State<FIRForm> createState() => _FIRFormState();
@@ -66,6 +73,9 @@ class _FIRFormState extends State<FIRForm> {
 
     // Generate FIR number automatically (you may customize this logic)
     firNumberController.text = 'FIR-${DateTime.now().millisecondsSinceEpoch}';
+    sectionsController1.text = '';
+    sectionsController2.text = '';
+    otherActsSectionsController.text = '';
   }
 
   @override

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:fir_analysis/result.dart';
+
 
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';

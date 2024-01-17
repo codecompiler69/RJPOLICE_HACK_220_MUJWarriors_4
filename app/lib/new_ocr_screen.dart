@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 import 'package:fir_analysis/result.dart';
+import 'package:flutter/services.dart';
 
 class NewOcrScreen extends StatefulWidget {
   const NewOcrScreen({super.key});
@@ -84,11 +85,17 @@ class _HomeScreenState extends State<NewOcrScreen> with WidgetsBindingObserver {
   void startCamera() {
     if (cameraController != null) {
       cameraSelected(cameraController!.description);
+
+      // Lock the screen orientation to prevent it from changing
+      SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
     }
   }
 
   void stopCamera() {
     if (cameraController != null) {
+      // Unlock the screen orientation when stopping the camera
+      SystemChrome.setPreferredOrientations(DeviceOrientation.values);
+
       cameraController?.dispose();
     }
   }
@@ -129,7 +136,7 @@ class _HomeScreenState extends State<NewOcrScreen> with WidgetsBindingObserver {
                               onPressed: isLoading ? null : scanImage,
                               child: isLoading
                                   ? const CircularProgressIndicator()
-                                  : const Text('Scan Text'),
+                                  : const Icon(Icons.camera),
                             ),
                           ),
                         ],
@@ -151,49 +158,48 @@ class _HomeScreenState extends State<NewOcrScreen> with WidgetsBindingObserver {
   }
 
   Future<void> scanImage() async {
-  if (cameraController == null || isLoading) {
-    return;
-  }
+    if (cameraController == null || isLoading) {
+      return;
+    }
 
-  setState(() {
-    isLoading = true;
-  });
-
-  final navigator = Navigator.of(context);
-
-  try {
-    final pictureFile = await cameraController!.takePicture();
-    final file = File(pictureFile.path);
-    print(file);
-
-    // Send the image to the Flask server
-    final detectedText = await sendImageToServer(file);
-    print('detectedText: ${detectedText}');
-
-    // Navigate to the result screen and pass the detected text
-    await navigator.push(
-      MaterialPageRoute(
-        builder: (context) => ResultScreen(text: detectedText),
-      ),
-    );
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('An error occurred when scanning text'),
-      ),
-    );
-  } finally {
     setState(() {
-      isLoading = false;
+      isLoading = true;
     });
-  }
-}
 
+    final navigator = Navigator.of(context);
+
+    try {
+      final pictureFile = await cameraController!.takePicture();
+      final file = File(pictureFile.path);
+      print(file);
+
+      // Send the image to the Flask server
+      final detectedText = await sendImageToServer(file);
+      print('detectedText: ${detectedText}');
+
+      // Navigate to the result screen and pass the detected text
+      await navigator.push(
+        MaterialPageRoute(
+          builder: (context) => ResultScreen(text: detectedText),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('An error occurred when scanning text'),
+        ),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   Future<String> sendImageToServer(File imageFile) async {
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse('http://192.168.1.7:5000/detect_text'),
+      Uri.parse('http://172.20.10.2:5000/detect_text'),
     );
 
     request.files

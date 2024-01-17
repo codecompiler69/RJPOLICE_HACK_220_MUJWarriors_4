@@ -78,4 +78,4 @@ def detect_text():
     return jsonify({'text': translated_text, 'ipc_section': ipc_section})
 
 if __name__ == '__main__':
-    app.run(host='172.20.10.2', debug=True)
+    app.run(host='10.255.2.10', debug=True)
