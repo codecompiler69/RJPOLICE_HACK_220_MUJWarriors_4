@@ -49,8 +49,14 @@ class _HomeScreenState extends State<HomeScreen> {
         print(responseBody);
 
         // Extract IPC sections from the response
-        ipcSections = jsonData['ipc_section'].cast<String>();
+        dynamic ipcSectionsData = jsonData['ipc_section'];
+        if (ipcSectionsData is List<dynamic>) {
+          ipcSections = ipcSectionsData.join(', ');
+        } else if (ipcSectionsData is String) {
+          ipcSections = ipcSectionsData;
+        }
         desc = jsonData['text'].cast<String>();
+        print(ipcSections.runtimeType);
       } else {
         // Handle error
         print('Error: ${response.reasonPhrase}');

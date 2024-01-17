@@ -14,12 +14,7 @@ class FIRForm extends StatefulWidget {
 }
 
 class _FIRFormState extends State<FIRForm> {
-  final TextEditingController actController1 = TextEditingController();
-  final TextEditingController sectionsController1 = TextEditingController();
-  final TextEditingController actController2 = TextEditingController();
-  final TextEditingController sectionsController2 = TextEditingController();
-  final TextEditingController otherActsSectionsController =
-      TextEditingController();
+  final TextEditingController sectionsController = TextEditingController();
   final TextEditingController occurrenceDayController = TextEditingController();
   final TextEditingController occurrenceDateController =
       TextEditingController();
@@ -70,7 +65,7 @@ class _FIRFormState extends State<FIRForm> {
 
     // Generate FIR number automatically (you may customize this logic)
     firNumberController.text = 'FIR-${DateTime.now().millisecondsSinceEpoch}';
-    otherActsSectionsController.text = widget.ipcSections;
+    sectionsController.text = widget.ipcSections;
   }
 
   @override
@@ -78,6 +73,7 @@ class _FIRFormState extends State<FIRForm> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('FIR Form'),
+        
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -106,28 +102,25 @@ class _FIRFormState extends State<FIRForm> {
                       child: const Icon(Icons.camera))
                 ],
               ),
-              _buildActAndSections(1, actController1, sectionsController1),
-              _buildActAndSections(2, actController2, sectionsController2),
-              _buildOtherActsAndSections(otherActsSectionsController),
-              _buildTitle("3. (a) Occurrence of Offence: Day… Date… Time…"),
+              _buildSections(sectionsController),
+              _buildTitle("3. (a) Occurrence of Offence:"),
               _buildOccurrenceOfOffence(),
-              _buildTitle("3. (b) Information received at P.S. Date… Time…"),
+              _buildTitle("3. (b) Information received at P.S."),
               _buildInformationReceivedAtPS(),
-              _buildTitle("3. (c) General Diary Reference: Entry No(s)… Time…"),
-              _buildGeneralDiaryReference(),
-              _buildTitle("4. Type of information: *Written / Oral"),
-              _buildTitle("5. Place of occurrence:"),
+              // _buildTitle("3. (c) General Diary Reference: Entry No(s)… Time…"),
+              // _buildGeneralDiaryReference(),
+              // _buildTitle("4. Type of information: *Written / Oral"),
+              _buildTitle("4. Place of occurrence:"),
               _buildPlaceOfOccurrence(),
-              _buildTitle("6. Complainant / information:"),
+              _buildTitle("5. Complainant / information:"),
               _buildComplainantInformation(),
               _buildTitle(
-                  "7. Details of known / suspected / unknown / accused with full particulars:"),
+                  "6. Details of known / suspected / unknown / accused with full particulars:"),
               _buildDetailsOfAccused(),
-              _buildTitle(
-                  "8. Reasons for delay in reporting by the complainant / Informant"),
-              _buildReasonsForDelay(),
-              _buildTitle("9. Particulars of properties stolen / involved:"),
-              _buildPropertiesStolen(),
+              _buildTitle("7. Description of Crime in detail"),
+              _buildDescriptionofCrime(),
+              // _buildTitle("8. Particulars of properties stolen / involved:"),
+              // _buildPropertiesStolen(),
             ],
           ),
         ),
@@ -199,51 +192,14 @@ class _FIRFormState extends State<FIRForm> {
     );
   }
 
-  Widget _buildActAndSections(
-    int index,
-    TextEditingController actController,
-    TextEditingController sectionsController,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          Text("(${index}) *Act:"),
-          const SizedBox(width: 8.0),
-          Expanded(
-            child: TextField(
-              controller: actController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                isDense: true,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8.0),
-          const Text("*Sections:"),
-          const SizedBox(width: 8.0),
-          Expanded(
-            child: TextField(
-              controller: sectionsController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                isDense: true,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildOtherActsAndSections(TextEditingController controller) {
+  Widget _buildSections(TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(
         controller: controller,
         maxLines: 2,
         decoration: const InputDecoration(
-          labelText: "(iv) *Other Acts & Sections",
+          labelText: "(i) *Acts & Sections",
           border: OutlineInputBorder(),
         ),
       ),
@@ -255,20 +211,8 @@ class _FIRFormState extends State<FIRForm> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
-          const Text("(a) Day:"),
-          const SizedBox(width: 8.0),
-          Expanded(
-            child: TextField(
-              controller: occurrenceDayController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                isDense: true,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8.0),
           const Text("Date:"),
-          const SizedBox(width: 8.0),
+          const SizedBox(width: 5.0),
           Expanded(
             child: GestureDetector(
               onTap: () async {
@@ -338,7 +282,7 @@ class _FIRFormState extends State<FIRForm> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
-          const Text("(b) Information received at P.S. Date:"),
+          const Text("Date:"),
           const SizedBox(width: 8.0),
           Expanded(
             child: GestureDetector(
@@ -368,7 +312,7 @@ class _FIRFormState extends State<FIRForm> {
               ),
             ),
           ),
-          const SizedBox(width: 8.0),
+          const SizedBox(height: 8.0),
           const Text("Time:"),
           const SizedBox(width: 8.0),
           Expanded(
@@ -614,7 +558,7 @@ class _FIRFormState extends State<FIRForm> {
     );
   }
 
-  Widget _buildReasonsForDelay() {
+  Widget _buildDescriptionofCrime() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(
@@ -622,8 +566,7 @@ class _FIRFormState extends State<FIRForm> {
         maxLines: 3,
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
-          labelText:
-              "Reasons for delay in reporting by the complainant / Informant",
+          labelText: "Description of Crime in detail",
         ),
       ),
     );
@@ -645,11 +588,7 @@ class _FIRFormState extends State<FIRForm> {
 
   @override
   void dispose() {
-    actController1.dispose();
-    sectionsController1.dispose();
-    actController2.dispose();
-    sectionsController2.dispose();
-    otherActsSectionsController.dispose();
+    sectionsController.dispose();
     occurrenceDayController.dispose();
     occurrenceDateController.dispose();
     occurrenceTimeController.dispose();
