@@ -1,4 +1,4 @@
-import 'package:fir_analysis/home_screen.dart';
+import 'package:fir_analysis/fir_new.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'OCR App',
-      home: HomeScreen(),
+      home: FIRForm(ipcSections:[] , description: '',),
     );
   }
 }
