@@ -5,7 +5,7 @@ import re
 client = InferenceClient("mistralai/Mixtral-8x7B-Instruct-v0.1")
 
 def format_prompt(message):
-    system_prompt = "You are a professional lawyer and expert in Indian Penal Code(IPC) Sections. Give the applicable IPC sections for the following scenario. The IPC sections should be in list form: "
+    system_prompt = "As an expert in Indian Penal Code (IPC) Sections, provide the relevant IPC sections for the given scenario. Present the IPC sections in list format: "
     prompt = f"<s>[SYS] {system_prompt} [/SYS]"
 
     prompt += f"[INST] {message} [/INST]"

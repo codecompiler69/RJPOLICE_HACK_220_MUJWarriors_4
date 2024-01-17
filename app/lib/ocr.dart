@@ -16,7 +16,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final ImagePicker _imagePicker = ImagePicker();
   File? _selectedImage;
-  List<String> ipcSections = [];
+  String ipcSections = '';
+  String desc = '';
 
   Future<void> _getImage(ImageSource source) async {
     try {
@@ -45,10 +46,11 @@ class _HomeScreenState extends State<HomeScreen> {
         var responseBody = await response.stream.bytesToString();
 
         Map<String, dynamic> jsonData = jsonDecode(responseBody);
+        print(responseBody);
 
         // Extract IPC sections from the response
-        List<String> ipcSections = jsonData['ipc_section'];
-        List<String> text = jsonData['text'].cast<String>();
+        ipcSections = jsonData['ipc_section'].cast<String>();
+        desc = jsonData['text'].cast<String>();
       } else {
         // Handle error
         print('Error: ${response.reasonPhrase}');
@@ -95,12 +97,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const FIRForm(
-                              ipcSections: ipcSections,
-                              description: '',
-                            )));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FIRForm(
+                      ipcSections: ipcSections,
+                      description: desc,
+                    ),
+                  ),
+                );
               },
               child: const Text('move to fir form'),
             ),

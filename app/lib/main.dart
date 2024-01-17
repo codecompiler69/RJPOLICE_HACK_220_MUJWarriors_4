@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'OCR App',
-      home: FIRForm(ipcSections:[] , description: '',),
+      home: FIRForm(ipcSections:'' , description: '',),
     );
   }
 }
