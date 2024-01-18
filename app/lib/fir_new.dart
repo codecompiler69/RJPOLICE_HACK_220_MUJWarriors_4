@@ -1,5 +1,6 @@
 import 'package:fir_analysis/ocr.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class FIRForm extends StatefulWidget {
   final String ipcSections;
@@ -50,8 +51,7 @@ class _FIRFormState extends State<FIRForm> {
       TextEditingController();
   final TextEditingController detailsOfAccusedController =
       TextEditingController();
-  final TextEditingController reasonsForDelayController =
-      TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
   final TextEditingController propertiesStolenController =
       TextEditingController();
   final TextEditingController districtController = TextEditingController();
@@ -68,12 +68,118 @@ class _FIRFormState extends State<FIRForm> {
     sectionsController.text = widget.ipcSections;
   }
 
+  Future<void> _submitForm() async {
+    const url =
+        'http://10.255.2.10:5000/generate_pdf'; // Replace with your server address
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: {
+          'my_name': 'Constable Name',
+          'dist': districtController.text,
+          'ps': policeStationController.text,
+          'year': yearController.text,
+          'firno': firNumberController.text,
+          'date': DateTime.now()
+              .toString(), // You may need to format this date as per your server requirements
+          'section1': sectionsController.text,
+          'OOdate': occurrenceDateController.text,
+          'OOtime': occurrenceTimeController.text,
+          'psdate': infoReceivedDateController.text,
+          'pstime': infoReceivedTimeController.text,
+          'address': placeAddressController.text,
+          'fathername': complainantFatherNameController.text,
+          'DOB': complainantDOBController.text,
+          'nationality': complainantNationalityController.text,
+          'occupation': complainantOccupationController.text,
+          'detailsofknownsus': detailsOfAccusedController.text,
+          'Desofcrime': descriptionController.text,
+          'officername': 'officer name',
+          'officerank': 'officer rank',
+          // Add other form fields as needed
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Server successfully generated PDF
+        // You can handle the response or leave it empty based on your server's response
+        print('PDF generated successfully');
+
+        // Optionally, you can extract information from the server response
+
+        // Navigate to a different screen to display PDF
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => PdfScreen(ipcSections: ipcSections),
+        //   ),
+        // );
+      } else {
+        // Handle error
+        print('Error submitting form: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Handle any exception that occurs during the HTTP request
+      print('Error submitting form: $error');
+    }
+  }
+
+  Future<void> _selectDateOrTime(
+      TextEditingController controller, bool isDate) async {
+    DateTime? selectedDateTime;
+
+    if (isDate) {
+      selectedDateTime = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2101),
+      );
+    } else {
+      TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+
+      if (pickedTime != null) {
+        selectedDateTime = DateTime(
+          DateTime.now().year,
+          DateTime.now().month,
+          DateTime.now().day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
+      }
+    }
+
+    if (selectedDateTime != null) {
+      final formattedDateTime = isDate
+          ? selectedDateTime.toString().substring(0, 10)
+          : _formatTime(selectedDateTime);
+
+      setState(() {
+        controller.text = formattedDateTime;
+      });
+    }
+  }
+
+  String _formatTime(DateTime dateTime) {
+    final hour = dateTime.hour;
+    final minute = dateTime.minute;
+
+    final period = dateTime.hour < 12 ? 'AM' : 'PM';
+
+    return '$hour:${minute.toString().padLeft(2, '0')} $period';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('FIR Form'),
-        
+        backgroundColor: Colors.blue,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -81,6 +187,11 @@ class _FIRFormState extends State<FIRForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              Image.asset(
+                'assets/rj_police_logo.jpg',
+                height: 100,
+                width: 100,
+              ),
               _buildTitle("1. Basic Information"),
               _buildFIRInformation(),
               const SizedBox(
@@ -97,7 +208,7 @@ class _FIRFormState extends State<FIRForm> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const HomeScreen()));
+                                builder: (context) => const OCR()));
                       },
                       child: const Icon(Icons.camera))
                 ],
@@ -121,6 +232,7 @@ class _FIRFormState extends State<FIRForm> {
               _buildDescriptionofCrime(),
               // _buildTitle("8. Particulars of properties stolen / involved:"),
               // _buildPropertiesStolen(),
+              ElevatedButton(onPressed: () {}, child: const Text('Submit'))
             ],
           ),
         ),
@@ -215,20 +327,7 @@ class _FIRFormState extends State<FIRForm> {
           const SizedBox(width: 5.0),
           Expanded(
             child: GestureDetector(
-              onTap: () async {
-                DateTime? pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2101),
-                );
-                if (pickedDate != null &&
-                    pickedDate != occurrenceDateController.text) {
-                  setState(() {
-                    occurrenceDateController.text = pickedDate.toString();
-                  });
-                }
-              },
+              onTap: () => _selectDateOrTime(occurrenceDateController, true),
               child: AbsorbPointer(
                 child: TextField(
                   controller: occurrenceDateController,
@@ -246,27 +345,14 @@ class _FIRFormState extends State<FIRForm> {
           const SizedBox(width: 8.0),
           Expanded(
             child: GestureDetector(
-              onTap: () async {
-                TimeOfDay? pickedTime = await showTimePicker(
-                  context: context,
-                  initialTime: TimeOfDay.now(),
-                );
-                if (pickedTime != null &&
-                    pickedTime !=
-                        TimeOfDay.fromDateTime(
-                            DateTime.parse(occurrenceTimeController.text))) {
-                  setState(() {
-                    occurrenceTimeController.text = pickedTime.format(context);
-                  });
-                }
-              },
+              onTap: () => _selectDateOrTime(occurrenceTimeController, false),
               child: AbsorbPointer(
                 child: TextField(
                   controller: occurrenceTimeController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     isDense: true,
-                    suffixIcon: Icon(Icons.access_time), // Time picker icon
+                    suffixIcon: Icon(Icons.access_time),
                   ),
                 ),
               ),
@@ -286,59 +372,32 @@ class _FIRFormState extends State<FIRForm> {
           const SizedBox(width: 8.0),
           Expanded(
             child: GestureDetector(
-              onTap: () async {
-                DateTime? pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2101),
-                );
-                if (pickedDate != null &&
-                    pickedDate != infoReceivedDateController.text) {
-                  setState(() {
-                    infoReceivedDateController.text = pickedDate.toString();
-                  });
-                }
-              },
+              onTap: () => _selectDateOrTime(infoReceivedDateController, true),
               child: AbsorbPointer(
                 child: TextField(
                   controller: infoReceivedDateController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     isDense: true,
-                    suffixIcon: Icon(Icons.date_range), // Date picker icon
+                    suffixIcon: Icon(Icons.date_range),
                   ),
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 8.0),
+          const SizedBox(width: 8.0),
           const Text("Time:"),
           const SizedBox(width: 8.0),
           Expanded(
             child: GestureDetector(
-              onTap: () async {
-                TimeOfDay? pickedTime = await showTimePicker(
-                  context: context,
-                  initialTime: TimeOfDay.now(),
-                );
-                if (pickedTime != null &&
-                    pickedTime !=
-                        TimeOfDay.fromDateTime(
-                            DateTime.parse(infoReceivedTimeController.text))) {
-                  setState(() {
-                    infoReceivedTimeController.text =
-                        pickedTime.format(context);
-                  });
-                }
-              },
+              onTap: () => _selectDateOrTime(infoReceivedTimeController, false),
               child: AbsorbPointer(
                 child: TextField(
                   controller: infoReceivedTimeController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     isDense: true,
-                    suffixIcon: Icon(Icons.access_time), // Time picker icon
+                    suffixIcon: Icon(Icons.access_time),
                   ),
                 ),
               ),
@@ -408,34 +467,34 @@ class _FIRFormState extends State<FIRForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("(a) Direction and Distance from P.S.:"),
-          const SizedBox(height: 4.0),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: placeDirectionController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    isDense: true,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8.0),
-              const Text("Beat No.:"),
-              const SizedBox(width: 8.0),
-              Expanded(
-                child: TextField(
-                  controller: placeBeatNoController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    isDense: true,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8.0),
+          // const Text("(a) Direction and Distance from P.S.:"),
+          // const SizedBox(height: 4.0),
+          // Row(
+          //   children: [
+          //     Expanded(
+          //       child: TextField(
+          //         controller: placeDirectionController,
+          //         decoration: const InputDecoration(
+          //           border: OutlineInputBorder(),
+          //           isDense: true,
+          //         ),
+          //       ),
+          //     ),
+          //     const SizedBox(width: 8.0),
+          //     const Text("Beat No.:"),
+          //     const SizedBox(width: 8.0),
+          //     Expanded(
+          //       child: TextField(
+          //         controller: placeBeatNoController,
+          //         decoration: const InputDecoration(
+          //           border: OutlineInputBorder(),
+          //           isDense: true,
+          //         ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // const SizedBox(height: 8.0),
           const Text("(b) Address:"),
           const SizedBox(height: 4.0),
           TextField(
@@ -446,27 +505,27 @@ class _FIRFormState extends State<FIRForm> {
               isDense: true,
             ),
           ),
-          const SizedBox(height: 8.0),
-          const Text(
-              "(c) In case outside limit of this Police Station, then the name of P.S.:"),
-          const SizedBox(height: 4.0),
-          TextField(
-            controller: placeOutsideStationController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              isDense: true,
-            ),
-          ),
-          const SizedBox(height: 8.0),
-          const Text("District:"),
-          const SizedBox(height: 4.0),
-          TextField(
-            controller: placeOutsideDistrictController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              isDense: true,
-            ),
-          ),
+          //       const SizedBox(height: 8.0),
+          //       const Text(
+          //           "(c) In case outside limit of this Police Station, then the name of P.S.:"),
+          //       const SizedBox(height: 4.0),
+          //       TextField(
+          //         controller: placeOutsideStationController,
+          //         decoration: const InputDecoration(
+          //           border: OutlineInputBorder(),
+          //           isDense: true,
+          //         ),
+          //       ),
+          //       const SizedBox(height: 8.0),
+          //       const Text("District:"),
+          //       const SizedBox(height: 4.0),
+          //       TextField(
+          //         controller: placeOutsideDistrictController,
+          //         decoration: const InputDecoration(
+          //           border: OutlineInputBorder(),
+          //           isDense: true,
+          //         ),
+          //       ),
         ],
       ),
     );
@@ -562,7 +621,7 @@ class _FIRFormState extends State<FIRForm> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(
-        controller: reasonsForDelayController,
+        controller: descriptionController,
         maxLines: 3,
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
@@ -609,7 +668,7 @@ class _FIRFormState extends State<FIRForm> {
     complainantOccupationController.dispose();
     complainantAddressController.dispose();
     detailsOfAccusedController.dispose();
-    reasonsForDelayController.dispose();
+    descriptionController.dispose();
     propertiesStolenController.dispose();
     super.dispose();
   }

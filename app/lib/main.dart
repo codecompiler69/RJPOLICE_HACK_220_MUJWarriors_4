@@ -1,7 +1,13 @@
-import 'package:fir_analysis/fir_new.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:fir_analysis/login_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -13,7 +19,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'OCR App',
-      home: FIRForm(ipcSections:'' , description: '',),
+      home: LoginScreen(),
     );
   }
 }

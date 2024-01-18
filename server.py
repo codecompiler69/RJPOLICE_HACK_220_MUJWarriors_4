@@ -1,9 +1,12 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from PIL import Image
 import pytesseract
 from googletrans import Translator
 from huggingface_hub import InferenceClient
 import re
+import jinja2
+import pdfkit
+from datetime import datetime
 
 app = Flask(__name__)
 translator = Translator()
@@ -76,6 +79,54 @@ def detect_text():
     ipc_section = generate(translated_text)
 
     return jsonify({'text': translated_text, 'ipc_section': ipc_section})
+
+@app.route('/generate_pdf', methods=['POST'])
+def generate_pdf():
+    # Get data from the request
+    data = request.json
+
+    # Update context with data received
+    context = {
+        'my_name': data['my_name'],
+        'dist': data['dist'],
+        'ps': data['ps'],
+        'year': data['year'],
+        'firno': data['firno'],
+        'date': data['date'],
+        'section1': data['section1'],
+        'section2': data['section2'],
+        'section3': data['section3'],
+        'othersec': data['othersec'],
+        'OOdate': data['OOdate'],
+        'OOtime': data['OOtime'],
+        'psdate': data['psdate'],
+        'pstime': data['pstime'],
+        'address': data['address'],
+        'fathername': data['fathername'],
+        'DOB': data['DOB'],
+        'nationality': data['nationality'],
+        'occupation': data['occupation'],
+        'detailsofknownsus': data['detailsofknownsus'],
+        'Desofcrime': data['Desofcrime'],
+        'officername': data['officername'],
+        'officerank': data['officerank'],
+        'today_date': datetime.today().strftime("%d %b, %Y"),
+    }
+
+    # Render HTML template
+    template_loader = jinja2.FileSystemLoader('template.html')  # Update this path to the location of your HTML template
+    template_env = jinja2.Environment(loader=template_loader)
+    
+    html_template = 'template.html'
+    template = template_env.get_template(html_template)
+    output_text = template.render(context)
+
+    # Generate PDF
+    config = pdfkit.configuration(wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")  # Update this path to the location of wkhtmltopdf
+    output_pdf = f'{data["firno"]}.pdf'
+    pdfkit.from_string(output_text, output_pdf, configuration=config)
+
+    return send_file(output_pdf, as_attachment=True)
 
 if __name__ == '__main__':
     app.run(host='10.255.2.10', debug=True)

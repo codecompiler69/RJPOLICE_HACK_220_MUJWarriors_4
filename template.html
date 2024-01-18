@@ -1,0 +1,257 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Microsoft Word - FORM IF 1.doc</title>
+    <meta name="author" content="web office" />
+    <style type="text/css">
+      * {
+        margin: 0;
+        padding: 0;
+        text-indent: 0;
+      }
+      h1 {
+        color: black;
+        font-family: "Times New Roman", serif;
+        font-style: normal;
+        font-weight: bold;
+        text-decoration: none;
+        font-size: 12pt;
+        text-align: center; 
+      }
+      p {
+        color: black;
+        font-family: "Times New Roman", serif;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 12pt;
+        margin: 0pt;
+        text-align: left;
+      }
+      li {
+        display: block;
+      }
+      #l1 {
+        padding-left: 0pt;
+        counter-reset: c1 1;
+      }
+      #l1 > li > *:first-child:before {
+        counter-increment: c1;
+        content: counter(c1, decimal) ". ";
+        color: black;
+        font-family: "Times New Roman", serif;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 12pt;
+        text-align: left;
+      }
+      #l1 > li:first-child > *:first-child:before {
+        counter-increment: c1 0;
+      }
+      #l2 {
+        padding-left: 0pt;
+        counter-reset: c2 2;
+      }
+      #l2 > li > *:first-child:before {
+        counter-increment: c2;
+        content: "(" counter(c2, lower-roman) ") ";
+        color: black;
+        font-family: "Times New Roman", serif;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 12pt;
+        text-align: left;
+      }
+      #l2 > li:first-child > *:first-child:before {
+        counter-increment: c2 0;
+      }
+      #l3 {
+        padding-left: 0pt;
+        counter-reset: d1 1;
+      }
+      #l3 > li > *:first-child:before {
+        counter-increment: d1;
+        content: "(" counter(d1, lower-latin) ") ";
+        color: black;
+        font-family: "Times New Roman", serif;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 12pt;
+        text-align: left;
+      }
+      #l3 > li:first-child > *:first-child:before {
+        counter-increment: d1 0;
+      }
+      #l4 {
+        padding-left: 0pt;
+        counter-reset: e1 2;
+      }
+      #l4 > li > *:first-child:before {
+        counter-increment: e1;
+        content: "(" counter(e1, lower-latin) ") ";
+        color: black;
+        font-family: "Times New Roman", serif;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 12pt;
+        text-align: left;
+      }
+      #l4 > li:first-child > *:first-child:before {
+        counter-increment: e1 0;
+      }
+      #l5 {
+        padding-left: 0pt;
+        counter-reset: f1 1;
+      }
+      #l5 > li > *:first-child:before {
+        counter-increment: f1;
+        content: "(" counter(f1, lower-latin) ") ";
+        color: black;
+        font-family: "Times New Roman", serif;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 12pt;
+        text-align: left;
+      }
+      #l5 > li:first-child > *:first-child:before {
+        counter-increment: f1 0;
+      }
+      #l6 {
+        padding-left: 0pt;
+        counter-reset: g1 5;
+      }
+      #l6 > li > *:first-child:before {
+        counter-increment: g1;
+        content: "(" counter(g1, lower-latin) ") ";
+        color: black;
+        font-family: "Times New Roman", serif;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 12pt;
+        text-align: left;
+      }
+      #l6 > li:first-child > *:first-child:before {
+        counter-increment: g1 0;
+      }
+    </style>
+  </head>
+  <body>
+    <p><br /></p>
+    <h1>FIRST INFORMATION REPORT</h1>
+    <p><h1>FIR</h1></p>
+    <p><br /></p>
+    <ol id="l1">
+      <li data-list-text="1.">
+        <p><b>Dist:</b> {{ dist }} <b>P.S:</b> {{ ps }}. <b>Year:</b> {{ year }} <b>F.I.R. No.:</b> {{ firno }} <b>Date:</b> {{ date }}</p>
+        <p><br /></p>
+      </li>
+      <li data-list-text="2.">
+        <p>(i) *<b>Sections:</b> {{ section2 }}...</p>
+        <ol id="l2">
+          <li data-list-text="(ii)">
+            <p> *<b>Sections:</b> {{ section2 }}...</p>
+          </li>
+          <li data-list-text="(iii)">
+            <p>*<b>Sections:</b> {{ section3 }}...</p>
+          </li>
+          <li data-list-text="(iv)">
+            <p>* <b> &amp; Sections:</b> {{ othersec }}</p>
+          </li>
+        </ol>
+      </li>
+      <li data-list-text="3.">
+        <p>
+          <br />
+        </p>
+        <ol id="l3">
+          <li data-list-text="(a)">
+            <p>* <b>Occurrence of Offence:</b> *<b>Date:</b> {{ OOdate }} *<b>Time:</b> {{ OOtime }}</p>
+            <p><br /></p>
+          </li>
+          <li data-list-text="(b)">
+            <p><b>Information received at P.S. Date:</b> {{ psdate }} <b>Time:</b> {{ pstime }}</p>
+          </li>
+        </ol>
+        <p><br /></p>
+      </li>
+      
+      <li data-list-text="5.">
+        <p>
+          <b>Place of occurrence:</b> 
+        </p>
+        <p><br /></p>
+        <ol id="l4">
+          <li data-list-text="(b)">
+            <p>* <b>Address:</b> {{ address }}</p>
+            <p>...</p>
+          </li>
+        </ol>
+        <p><br /></p>
+      </li>
+      <li data-list-text="6.">
+        <p><b>Complainant / information:</b></p>
+        <p><br /></p>
+        <ol id="l5">
+          <li data-list-text="(a)">
+            <p><b>Name:</b> {{ my_name }}</p>
+          </li>
+          <li data-list-text="(b)">
+            <p><b>Father’s / Husband’s Name:</b> {{ fathername }}</p>
+          </li>
+          <li data-list-text="(c)">
+            <p><b>Date / Year of Birth:</b> {{ DOB }} (d) <b>Nationality:</b> {{ nationality }}</p>
+          </li>
+        </ol>
+        <ol id="l6">
+          <li data-list-text="(f)">
+            <p><b>Occupation:</b> {{ occupation }}</p>
+          </li>
+          <li data-list-text="(g)">
+            <p><b>Address:</b> {{ address }}</p>
+          </li>
+        </ol>
+        <p><br /></p>
+      </li>
+      <li data-list-text="7.">
+        <p>
+          <b>Details of known / suspected / unknown / accused with full particulars
+          (Attach separate sheet if necessary):</b>
+        </p>
+        <p>{{ detailsofknownsus }}</p>
+        <p>...</p>
+      </li>
+      <li data-list-text="8.">
+        <p>
+          <b>Description of crime in detail:</b>
+          {{ Desofcrime }}
+        </p>
+        <p>...</p>
+      </li>
+      <p
+        style="
+          padding-top: 2pt;
+          padding-left: 7pt;
+          text-indent: 0pt;
+          text-align: left;
+        "
+      >
+        <b>Signature of the Officer-in-charge, Police Station</b>
+      </p>
+      <p style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        * <b>Name:</b> {{ officername }}
+      </p>
+      <p style="padding-left: 6pt; text-indent: 0pt; text-align: left">
+        *<b>Rank:</b>{{ officerank }} 
+      </p>
+      <p style="padding-left: 6pt; text-indent: 0pt; text-align: left">
+        *<b>Date:</b>{{ today_date }} 
+      </p>
+    </body>
+</html>

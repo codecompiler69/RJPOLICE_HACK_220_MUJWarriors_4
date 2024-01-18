@@ -14,7 +14,7 @@ def format_prompt(message):
 
 def generate(
     prompt,temperature=0.2, max_new_tokens=256, top_p=0.95, repetition_penalty=1.0,
-):
+    ):
     temperature = float(temperature)
     if temperature < 1e-2:
         temperature = 1e-2

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "77560393674",
+    "project_id": "firanalysis",
+    "storage_bucket": "firanalysis.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:77560393674:android:9972270692ce276751a933",
+        "android_client_info": {
+          "package_name": "com.example.fir_analysis"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPxb0KZcAe-HRsYIiz8QbeKEB8yh4Ud_c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

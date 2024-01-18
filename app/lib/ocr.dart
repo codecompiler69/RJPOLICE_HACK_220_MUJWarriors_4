@@ -6,18 +6,19 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class OCR extends StatefulWidget {
+  const OCR({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<OCR> createState() => _OCRState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _OCRState extends State<OCR> {
   final ImagePicker _imagePicker = ImagePicker();
   File? _selectedImage;
   String ipcSections = '';
   String desc = '';
+  bool isLoading = false;
 
   Future<void> _getImage(ImageSource source) async {
     try {
@@ -26,10 +27,31 @@ class _HomeScreenState extends State<HomeScreen> {
       if (pickedFile != null) {
         setState(() {
           _selectedImage = File(pickedFile.path);
+          isLoading =
+              true; // Set loading to true while waiting for the response
         });
+
+        // Send image to server and receive response
+        await _sendImageToServer(_selectedImage!.path);
+
+        // Move to FIRForm screen with necessary arguments
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FIRForm(
+              ipcSections: ipcSections,
+              description: desc,
+            ),
+          ),
+        );
       }
     } catch (e) {
       print("Error picking image: $e");
+    } finally {
+      // Set loading to false after the response is received
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -56,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ipcSections = ipcSectionsData;
         }
         desc = jsonData['text'].cast<String>();
-        print(ipcSections.runtimeType);
+        // print(ipcSections.runtimeType);
       } else {
         // Handle error
         print('Error: ${response.reasonPhrase}');
@@ -79,41 +101,26 @@ class _HomeScreenState extends State<HomeScreen> {
             _selectedImage != null
                 ? Image.file(
                     _selectedImage!,
-                    height: 200.0,
-                    width: 200.0,
                     fit: BoxFit.cover,
                   )
                 : const Text('No image selected'),
             const SizedBox(height: 16.0),
             ElevatedButton(
-              onPressed: () => _getImage(ImageSource.gallery),
+              onPressed:
+                  isLoading ? null : () => _getImage(ImageSource.gallery),
               child: const Text('Select Image from Gallery'),
             ),
             const SizedBox(height: 16.0),
             ElevatedButton(
-              onPressed: () => _getImage(ImageSource.camera),
+              onPressed: isLoading ? null : () => _getImage(ImageSource.camera),
               child: const Text('Open Camera'),
             ),
-            _selectedImage != null
-                ? ElevatedButton(
-                    onPressed: () => _sendImageToServer(_selectedImage!.path),
-                    child: const Text('Send Image to Server'),
+            isLoading
+                ? const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: CircularProgressIndicator(),
                   )
                 : const SizedBox.shrink(),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FIRForm(
-                      ipcSections: ipcSections,
-                      description: desc,
-                    ),
-                  ),
-                );
-              },
-              child: const Text('move to fir form'),
-            ),
           ],
         ),
       ),
